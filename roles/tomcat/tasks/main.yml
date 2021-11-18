@@ -5,8 +5,27 @@
     name: tomcat
     state: installed
 
-- name: start tomcat
+- name: Install additional packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - tomcat-webapps
+    - tomcat-admin-webapps 
+    - tomcat-docs-webapp
+
+- name: copy tomcat-users.xml
+  copy:
+     src: tomcat-users.xml
+     dest: /usr/share/tomcat/conf/tomcat-users.xml
+
+- name: Start tomcat
   service:
-    name: tomcat
-    state: started
+     name: tomcat
+     state: started
+
+- name: Enable tomcat
+  service:
+     name: tomcat
+     enabled: yes
 ...
