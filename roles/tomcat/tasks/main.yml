@@ -1,0 +1,12 @@
+---
+# tasks file for tomcat
+- name: intsall tomcat
+  yum:
+    name: tomcat
+    state: installed
+
+- name: start tomcat
+  service:
+    name: tomcat
+    state: started
+...
