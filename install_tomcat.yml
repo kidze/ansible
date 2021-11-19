@@ -1,6 +1,9 @@
 ---
 - hosts: webservers
 
+  become: true
+  become_user: jenkins
+  
   roles:
     - tomcat
 ...
