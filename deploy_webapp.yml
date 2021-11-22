@@ -1,38 +1,11 @@
 ---
-############################################backup and cleanup
-- name: Checking if webapp folder exists
-  stat:
-    path: "/usr/share/tomcat/webapps"
-  register: folder
-  
-- name: Create backup
-  copy:
-    src: /usr/share/tomcat/webapps
-    dest: /opt/backup
-  when: folder.stat.exists
-  
-- name: Delete webapps folder if it exists
-  file:
-    path: /usr/share/tomcat/webapps
-    state: absent
-  when: folder.stat.exists
+- hosts: webservers
 
-############################################deploy webapp
-- name: Checking if jenkins have autherization to write
-  stat:
-    path: "/usr/share/tomcat/webapps"
-  register: write_check
+  become: true
+  #become_user: jenkins
+  #vars:
+    #ansible_become_pass: "jenkins"
   
-- name: Add jenkins to tomcat group if no
-  user:
-    name: "{{ jenkins }}"
-    groups: tomcat
-    append: yes
-  when: write_check.stat.writeable == false
-  
-- name: Copy war file from master to tomcat server
-  copy:
-    src: /var/lib/jenkins/workspace/mavenjob/webapp/target/webapp.war
-    dest: /usr/share/tomcat/webapps/
+  roles:
+    - webapp
 ...
-  
